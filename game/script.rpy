@@ -8,12 +8,12 @@
 
 label start:
 
-    # Show a background. This uses a placeholder by default, but you can
-    # add a file (named either "bg room.png" or "bg room.jpg") to the
-    # images directory to show it.
+    # day one
 
     call day1
 
-    # This ends the game.
+    # exam day
+
+    call exam_day
 
     return
