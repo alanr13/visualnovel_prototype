@@ -14,6 +14,7 @@ label day1:
     $ mc_name = "Player"
 
     show screen time_hours
+    show screen stats
 
     "Ohh fuck, I overslept AGAIN."
 
