@@ -5,10 +5,15 @@ define mc = DynamicCharacter("mc_name")
 define n = DynamicCharacter("n_name")
 define t = DynamicCharacter("t_name")
 
-default examPointTotal = 0
+default persistent.ending_failed = False
+default persistent.ending_passed = False
+default persistent.playthrough = 0
 default learnPointTotal = 0
 default relationshipPointTotal = 0
-default mc_name = "Kupcia"
+default grade = 0
+default attempt = 0
+default encounteredNami = False
+default mc_name = "Player"
 default n_name = "Nami"
 default t_name = "Teacher"
 
@@ -58,6 +63,7 @@ image teacher_huh:
     "images/teacher_huh.png"
     yalign 0
 
+image kubica = "images/kubica.jpg"
 image cat = "images/cat_meowjak.png"
 image dog = "images/dog.png"
 image cat_food = "images/cat_food.png"
@@ -76,6 +82,41 @@ screen stats():
         xalign 1.0 yalign 0.0
         vbox:
             text "Learning: [learnPointTotal]"
-            text "Exam: [examPointTotal]"
             text "Relationship: [relationshipPointTotal]"
+
+label get_up:
+    "It is so hard for me, but it's for my well-being."
+
+    return
+
+label sleep:
+    "But I'll rest some more."
+    
+    $ hour = "11:30"
+    return
+
+init python:
+    def is_exam_passed(learnPointTotal):
+        if learnPointTotal >= 20:
+            return False
+        else:
+            return True
+
+    def reset():
+        persistent.ending_failed = False
+        persistent.ending_passed = False
+        persistent.playthrough = 0
+        learnPointTotal = 0
+        relationshipPointTotal = 0
+        grade = 0
+        attempt = 0
+        encounteredNami = False
+        mc_name = "Player"
+        hour = "8:00"
+
+
+
+
+
+
     

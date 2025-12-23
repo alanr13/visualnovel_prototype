@@ -1,8 +1,4 @@
 label day1:
-    scene black
-    pause 0.2
-    scene bg pokoj
-    show bg pokoj at wake_blur
     call open_eyes
 
     # This shows a character sprite. A placeholder is used, but you can
@@ -11,7 +7,7 @@ label day1:
 
     # These display lines of dialogue.
 
-    $ mc_name = "Player"
+    $ mc_name = "Alan"
 
     show screen time_hours
     show screen stats
@@ -28,6 +24,7 @@ label day1:
         "Rot in bed.":
             show black
             "Bad ending."
+            jump _main_menu
 
     "Okay... so let's get to the bathroom."
 
@@ -56,6 +53,7 @@ label day1:
 
     menu:
         "Feed him.":
+            $ learnPointTotal += 5
             mc "No problem my boy, I'll get you something."
             call feed_cat
         "Don't feed him.":
@@ -74,7 +72,9 @@ label day1:
 
     menu:
         "Go for a walk":
+            $ learnPointTotal += 5
             mc "Alright! Let's go."
+            $ encounteredNami = True
             call walk_with_dog
         "Don't go for a walk":
             mc "Nah, sorry, I need to grind for an exam. Mom will go with you"
@@ -84,11 +84,6 @@ label day1:
 
     scene bg pokoj with fade
     "Oh gosh, I'm so tired, let's go sleep and see how exam will go."
-    return
-
-label get_up:
-    "It is so hard for me, but it's for my well-being."
-
     return
 
 label feed_cat:
@@ -126,6 +121,8 @@ label walk_with_dog:
     n "There will be math exam in 2 days. Would you like to learn together?"
     menu:
         "Learn with Nami.":
+            $ learnPointTotal += 10
+            $ relationshipPointTotal += 5
             mc "Umm, ok, why not. Maybe together we can learn much more."
             show nami_smile_blush
             n "Yaaay! What about 3 pm in your house."
@@ -133,6 +130,7 @@ label walk_with_dog:
             n "Bye."
             call learn_with_nami
         "Learn alone.":
+            $ learnPointTotal += 5
             mc "No, I think I'm good learning alone."
             show nami_shout
             n " Uhh, why?!."
@@ -184,11 +182,33 @@ label learn_with_nami:
     show nami_smile_blush
     n "That's why I'm here to help you :)."
     "Yeaa... She's definitely up to something."
+    $ relationshipPointTotal += 5
 
     mc "Okay, so let's go to my room to learn."
     n "Yeah,let's go!"
 
     scene bg pokoj
+
+    show nami_neutral at left
+    n "What a nice room..."
+    "Something draws her attention."
+
+    show nami_smile_blush at right
+    n "OHHH, ARE YOU ROBERT KUBICA FAN?! I didn't know that you're also an F1 fan!"
+    mc "Yep xD, happened to be."
+    n "Can I look at a poster?"
+
+    menu:
+        "Show poster":
+            mc "Of course"
+            hide nami_smile_blush
+            $ relationshipPointTotal += 5
+            $ learnPointTotal += 10
+            call show_poster
+        "Focus on learning":
+            $ learnPointTotal += 5
+            mc "Maybe not..., let's focus on learning."
+            n "Ehhh, ok, you're so boring..."
 
     "*five hours passed*."
     $ hour = "20:10"
@@ -204,24 +224,11 @@ label learn_with_nami:
     mc "Ey, ey, I was joking, chill out XD. But seriously, now I feel way more confident with my math,
     I'm starting to think that this exam might go well actually."
     show nami_smile
-    n "Happy to hear that, but I think one more session would be good, what you think about it?"
+    n "Happy to hear that, it was a good learning session."
+    n "Sooo... Good luck at the exam tommorrow!"
+    mc "Thanks!"
+    $ relationshipPointTotal += 5;
     $ hour = "20:15"
-
-    menu:
-        "Of course!":
-            show nami_smile_blush
-            n "Yaaay! 3 pm tommorrow again?"
-            mc "Yep!"
-            n "Good, see you tommorrow!"
-            "*hugs*"
-            n "Bye, bye!"
-            mc "Oh, bye..."
-            "What was that... . But for some reason I'm starting to feel something towards her?
-            Am I actually in love? Nah..."
-        "No, I'm good":
-            show nami_neutral
-            n "Okay, so good luck at the exam. Bye."
-            mc "Thanks, bye."
         
     "Anyway, let's play some CS for relax."
     scene bg game with wipeleft
@@ -238,11 +245,14 @@ label learn_alone:
 
     menu:
         "Make some tea and start learning.":
+            $ learnPointTotal += 10
             scene bg kuchnia with fade
 
         "One hour of gaming wont be too harsh.":
-            scene bg game with fade
+            scene bg pokoj with fade
+            show bg game
             "*7 hours passed*"
+            hide bg game
             $ hour = "18:00"
             scene bg pokoj with fade
             "Ok, I'm satisfied, let's go learning, what hour is it?"
@@ -250,7 +260,25 @@ label learn_alone:
 
     scene bg pokoj with fade
     "Alright, let's get through it."
-    scene bg math with wipeleft
+    show bg math
+    $ learnPointTotal += 5
     "*learning till 23:00*"
+    hide bg math
+
+    return
+
+label show_poster:
+    show kubica
+    pause 3.0
+    n "Wooow, I remember that pretty well, despite being age of 5. My dad is also an F1 fan
+    and he was very emotional about that win at Canada."
+    mc "Yeah, that was huge. Pity that he had that crash in 2011."
+    n "Mhm, he could've been a world champion definitely, massive talent."
+    hide kubica
+    show nami_smile
+    "OMG! Wife material."
+    mc "Hey, so if you're an F1 fan, how about we watch a next race that I'll be."
+    show nami_smile_blush at right
+    n "That's a good plan, but let's focus on learning for an exam first"
 
     return

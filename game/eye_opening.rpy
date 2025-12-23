@@ -14,6 +14,10 @@ transform wake_blur:
     linear EYE_OPENING_TIME blur 0
 
 label open_eyes:
+    scene black
+    pause 0.2
+    scene bg pokoj
+    show bg pokoj at wake_blur
 
     show eyelid_top_img at eyelid_top
     show eyelid_bottom_img at eyelid_bottom
