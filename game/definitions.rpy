@@ -5,17 +5,17 @@ define mc = DynamicCharacter("mc_name")
 define n = DynamicCharacter("n_name")
 define t = DynamicCharacter("t_name")
 
-default persistent.ending_failed = False
-default persistent.ending_passed = False
+default persistent.exam_passed = False
 default persistent.playthrough = 0
+default persistent.encounteredNami = False
+default learnedWithNami = False
 default learnPointTotal = 0
 default relationshipPointTotal = 0
-default grade = 0
 default attempt = 0
-default encounteredNami = False
 default mc_name = "Player"
 default n_name = "Nami"
 default t_name = "Teacher"
+default ending = ""
 
 default hour = "10:00"
 
@@ -63,10 +63,15 @@ image teacher_huh:
     "images/teacher_huh.png"
     yalign 0
 
+image race="images/f1_race.jpg"
 image kubica = "images/kubica.jpg"
 image cat = "images/cat_meowjak.png"
 image dog = "images/dog.png"
 image cat_food = "images/cat_food.png"
+image chopper = "images/chopper.webp"
+image jonkler = "images/jonkler.webp"
+image kanye = "images/kanye.gif"
+image chomik = "images/chomik.jpg"
 image cat_food_small:
     "images/cat_food.png"
     zoom 0.35
@@ -95,24 +100,59 @@ label sleep:
     $ hour = "11:30"
     return
 
+label show_cat:
+    show cat:
+        xalign 0.75
+        yalign 0.3
+        linear 0.2 yalign 0.2
+        linear 0.2 yalign 0.3
+        repeat 2
+    return
+
+label learn_or_play:
+    menu:
+        "Learn.":
+            $ learnPointTotal += 10
+            show bg math
+            "*learns math for several hours*"
+        "Play CS.":
+            show bg game
+            "*plays CS for several hours*"
+            hide bg game
+            "AHHH, again, I procrastinated..."
+    return
+
 init python:
     def is_exam_passed(learnPointTotal):
-        if learnPointTotal >= 20:
-            return False
-        else:
+        if learnPointTotal >= 30:
             return True
+        else:
+            return False
 
     def reset():
-        persistent.ending_failed = False
-        persistent.ending_passed = False
+        global learnedWithNami
+        global learnPointTotal
+        global relationshipPointTotal
+        global attempt
+        global mc_name
+        global hour
+
+        persistent.exam_passed = False
         persistent.playthrough = 0
+        persistent.encounteredNami = False
+
+        learnedWithNami = False
         learnPointTotal = 0
         relationshipPointTotal = 0
-        grade = 0
         attempt = 0
-        encounteredNami = False
         mc_name = "Player"
         hour = "8:00"
+        ending = ""
+
+    def isEndingBad(ending):
+        if(ending == "bad"):
+            return True
+        return False
 
 
 

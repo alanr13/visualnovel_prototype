@@ -1,6 +1,6 @@
 label exam_day:
     $ hour = "8:00"
-    call open_eyes
+    call open_eyes from _call_open_eyes_4
 
     "*yawn* Ahh, it's the live or die day. Let's see how it will go."
 
@@ -25,6 +25,10 @@ label exam_day:
     scene bg sala with wipeleft
 
     $ hour = "9:00"
+    show chopper at left
+    show chomik at right
+    show jonkler
+    show kanye
     "*writes exam*"
 
     scene bg szkola with wipeleft
@@ -38,9 +42,36 @@ label exam_day:
 
     if persistent.playthrough == 0:
         if is_exam_passed(learnPointTotal):
+            $ persistent.exam_passed = True
             show teacher_normaltalk
-            t "Alan, congratulations, you passed an exam with grade [grade]. You can be proud of yourself"
+            t "Alan, congratulations, you passed an exam. You can be proud of yourself"
             mc "Yes! Thank you."
+            if learnedWithNami == False:
+                "Good ending."
+                $ ending = "good"
+                return
+            else:
+                scene bg szkola with blinds    
+                show nami_smile
+                n "Hey [mc], how did exam go? Have you passed it?"
+                mc "Yes, I passed! Thank you, without your help, I could've passed it."
+                show nami_smile_blush
+                n "Your welcome :)"
+                mc "Hey, I wanted to ask you something. Formula 1 race will be on sunday, but you pro
+                bably know it. Would you like to watch it together in my house?"
+                if relationshipPointTotal > 15:
+                    $ relationshipPointTotal += 5
+                    n "What do you think? YES OF COURSE!"
+                    mc "Woohoo"
+                    $ persistent.playthrough = 1
+                else:
+                    show nami_neutral
+                    n "Sorry, I have already planned it with someone else."
+                    mc "Shame, but anyway... appreciate for help, bye."
+                    n "No problem, bye."
+                    "Friendzone ending."
+                    $ ending = "friendzone"
+                    return
         else:
             if attempt == 0:
                 show teacher_normal
@@ -61,6 +92,7 @@ label exam_day:
                 mc "Ehhhh.... Understood."
                 t "Alan, bloody hell, learn, get your act together."
                 mc "I know, but it's just for some reason hard for me."
+                hide teacher_angrytalk
                 show teacher_huh at left
                 t "Is something bad happening in your life?"
                 mc "Not necessarly bad. I just feel like I don't have energy. I have all these
@@ -71,33 +103,26 @@ label exam_day:
                 mc "Thank you miss, I appreciate that."
                 t "Stay strong."
                 $ attempt += 1
-    
-        scene bg szkola with blinds
-        show nami_smile
-        n "Hey [n], how did exam go? Have you passed it?"
-        mc "Yes, I passed! Thank you, without your help, I could've passed it."
-        show nami_smile_blush
-        n "Your welcome :)"
-        mc "Hey, I wanted to ask you something. Belgian Grand Prix will be on sunday, but you pro
-        bably know it. Would you like to watch it together in my house?"
+                $ persistent.playthrough = 1
 
-        if relationshipPointTotal > 10:
-            n "What do you think? YES OF COURSE!"
-            mc "Woohoo"
-        else:
-            show nami_neutral
-            n "Sorry, I have already planned it with someone else."
-            mc "Shame, but anyway... appreciate for help, bye."
-            n "No problem, bye."
     elif persistent.playthrough == 1:
         if is_exam_passed(learnPointTotal):
+            $ persistent.exam_passed = True
             show teacher_normaltalk
             t "Alan, congratulations, you passed a decisive exam. You can be proud of yourself.
             You've endured the hard time."
             mc "Yes! Thank you."
+            show black
+            "Redemption ending."
+            $ ending = "redemption"
+            $ reset()
         else:
             show teacher_angry
             t "Alan, I'm sorry, but you'll have to repeat the class."
             mc "Shame."
+            show black
+            "Worst ending."
+            $ ending = "worst"
+            $ reset()
     return
     

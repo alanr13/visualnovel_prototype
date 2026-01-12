@@ -1,5 +1,5 @@
 label day2:
-    call open_eyes
+    call open_eyes from _call_open_eyes_3
 
     $ hour = "8:00"
     "*one week later*"
@@ -7,9 +7,9 @@ label day2:
     menu:
         "Get up":
             $ learnPointTotal += 5
-            call get_up
+            call get_up from _call_get_up_2
         "5 minutes":
-            call sleep
+            call sleep from _call_sleep_1
 
     scene bg lazienka with wipeleft
     "*brushes teeth*"
@@ -48,12 +48,14 @@ label day2:
     menu:
         "learn math":
             $ learnPointTotal += 5
-            call learning
+            call learning from _call_learning
 
         "give up":
             show black
             "Bad ending."
-            jump _main_menu
+            $ ending = "bad"
+            $ reset()
+            return
     
     "Okay, I think I've learned as much as I could. Maybe I could've learnt more, but... it is what is it."
     "Let's go to sleep."

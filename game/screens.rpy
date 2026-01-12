@@ -300,12 +300,14 @@ screen navigation():
         if main_menu:
 
             textbutton _("Start") action Start()
+            textbutton _("Reset game status") action [Function(reset), Jump("_main_menu")]
 
         else:
 
             textbutton _("History") action ShowMenu("history")
 
             textbutton _("Save") action ShowMenu("save")
+        
 
         textbutton _("Load") action ShowMenu("load")
 
@@ -756,6 +758,11 @@ screen preferences():
                     textbutton _("After Choices") action Preference("after choices", "toggle")
                     textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle"))
 
+                vbox:
+                    style_prefix "radio"
+                    label _("Language")
+                    textbutton "English" action Language("english")
+                    textbutton "Polski" action Language("polski")
                 ## Additional vboxes of type "radio_pref" or "check_pref" can be
                 ## added here, to add additional creator-defined preferences.
 

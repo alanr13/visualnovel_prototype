@@ -1,5 +1,5 @@
 label day1:
-    call open_eyes
+    call open_eyes from _call_open_eyes
 
     # This shows a character sprite. A placeholder is used, but you can
     # replace it by adding a file named "eileen happy.png" to the images
@@ -9,9 +9,6 @@ label day1:
 
     $ mc_name = "Alan"
 
-    show screen time_hours
-    show screen stats
-
     "Ohh fuck, I overslept AGAIN."
 
     "I have an important exams in 2 days, but I haven't learned anything."
@@ -20,11 +17,14 @@ label day1:
         "Ehhh"
 
         "Get up and do something.":
-            call get_up
-        "Rot in bed.":
+            call get_up from _call_get_up
+        "Rot in bed":
             show black
             "Bad ending."
-            jump _main_menu
+            $ ending = "bad"
+            $ reset()
+            return
+            
 
     "Okay... so let's get to the bathroom."
 
@@ -55,7 +55,7 @@ label day1:
         "Feed him.":
             $ learnPointTotal += 5
             mc "No problem my boy, I'll get you something."
-            call feed_cat
+            call feed_cat from _call_feed_cat
         "Don't feed him.":
             mc "Mom will feed you, I don't have time."
     
@@ -74,15 +74,13 @@ label day1:
         "Go for a walk":
             $ learnPointTotal += 5
             mc "Alright! Let's go."
-            $ encounteredNami = True
-            call walk_with_dog
+            call walk_with_dog from _call_walk_with_dog
         "Don't go for a walk":
             mc "Nah, sorry, I need to grind for an exam. Mom will go with you"
-            call learn_alone
+            call learn_alone from _call_learn_alone
     
     $ hour = "23:00"
 
-    scene bg pokoj with fade
     "Oh gosh, I'm so tired, let's go sleep and see how exam will go."
     return
 
@@ -106,6 +104,7 @@ label walk_with_dog:
     scene bg dwor2 with wipeleft
     $ hour = "10:50"
     show nami_smile
+    $ persistent.encounteredNami = True
     n "Oh, hi [mc]! What a pretty dog, I didn't know that you have one."
     "It's she again. Why won't she go away..."
     mc "H-h-hi."
@@ -121,6 +120,7 @@ label walk_with_dog:
     n "There will be math exam in 2 days. Would you like to learn together?"
     menu:
         "Learn with Nami.":
+            $ learnedWithNami = True
             $ learnPointTotal += 10
             $ relationshipPointTotal += 5
             mc "Umm, ok, why not. Maybe together we can learn much more."
@@ -128,7 +128,7 @@ label walk_with_dog:
             n "Yaaay! What about 3 pm in your house."
             mc "Sounds good. So see you then, bye."
             n "Bye."
-            call learn_with_nami
+            call learn_with_nami from _call_learn_with_nami
         "Learn alone.":
             $ learnPointTotal += 5
             mc "No, I think I'm good learning alone."
@@ -137,7 +137,7 @@ label walk_with_dog:
             mc "Because I don't know you much and I prefer to learn alone."
             show nami_neutral
             n "Umm, ok..."
-            call learn_alone
+            call learn_alone from _call_learn_alone_1
     return
 
 label learn_with_nami:
@@ -189,11 +189,14 @@ label learn_with_nami:
 
     scene bg pokoj
 
-    show nami_neutral at left
+    show nami_neutral at left:
+        yalign 0.0
     n "What a nice room..."
     "Something draws her attention."
+    hide nami_neutral
 
-    show nami_smile_blush at right
+    show nami_smile_blush at right:
+        yalign 0.0
     n "OHHH, ARE YOU ROBERT KUBICA FAN?! I didn't know that you're also an F1 fan!"
     mc "Yep xD, happened to be."
     n "Can I look at a poster?"
@@ -204,11 +207,12 @@ label learn_with_nami:
             hide nami_smile_blush
             $ relationshipPointTotal += 5
             $ learnPointTotal += 10
-            call show_poster
+            call show_poster from _call_show_poster
         "Focus on learning":
-            $ learnPointTotal += 5
+            $ learnPointTotal += 10
             mc "Maybe not..., let's focus on learning."
             n "Ehhh, ok, you're so boring..."
+            hide nami_smile_blush
 
     "*five hours passed*."
     $ hour = "20:10"
@@ -229,20 +233,18 @@ label learn_with_nami:
     mc "Thanks!"
     $ relationshipPointTotal += 5;
     $ hour = "20:15"
+    hide nami_smile
         
     "Anyway, let's play some CS for relax."
-    scene bg game with wipeleft
+    show bg game
     "*playing till 23:00*"
-
+    hide bg game
     return
 
 label learn_alone:
     $ hour = "11:00"
 
     scene bg korytarz
-    "Okay, back home. It's only 11 am, so I don't think I should be rushing with learning."
-    "But... hmmm, if I don't pass that math exam, I'll repeat the class and I don't want it."
-
     menu:
         "Make some tea and start learning.":
             $ learnPointTotal += 10
@@ -278,7 +280,9 @@ label show_poster:
     show nami_smile
     "OMG! Wife material."
     mc "Hey, so if you're an F1 fan, how about we watch a next race that I'll be."
-    show nami_smile_blush at right
+    hide nami_smile
+    show nami_smile_blush at right:
+        yalign 0.0
     n "That's a good plan, but let's focus on learning for an exam first"
 
     return
